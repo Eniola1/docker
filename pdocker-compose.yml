@@ -1,0 +1,32 @@
+version: '3.8' # Add version to your YAML
+
+services:
+  # Nginx service
+  web:
+    build: 
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+
+  # PHP service
+  app:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+  
+  # MySQL service
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysqldata:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: docker-php
+
+volumes:
+  mysqldata:
